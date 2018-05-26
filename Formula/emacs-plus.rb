@@ -17,7 +17,7 @@ class EmacsPlus < Formula
   end
 
   head do
-    url "https://github.com/emacs-mirror/emacs.git"
+    url "https://github.com/emacs-mirror/emacs.git", :branch => 'pdumper'
 
     depends_on "autoconf" => :build
     depends_on "gnu-sed" => :build
@@ -79,6 +79,8 @@ class EmacsPlus < Formula
          "Experimental: use a title bar colour inferred by your theme (stable only)"
   option "with-no-title-bars",
          "Experimental: build with a patch for no title bars on frames (--HEAD and --devel has this built-in via undecorated flag)"
+  option "with-pdumper",
+         "Build with pdumper support"
 
   deprecated_option "cocoa" => "with-cocoa"
   deprecated_option "keep-ctags" => "with-ctags"
@@ -157,6 +159,18 @@ class EmacsPlus < Formula
       url "https://gist.githubusercontent.com/aatxe/ecd14e3e4636524915eab2c976650576/raw/c20527ab724ddbeb14db8cc01324410a5a722b18/emacs-pixel-scrolling.patch"
       sha256 "34654d889e8a02aedc0c39a0f710b3cc17d5d4201eb9cb357ecca6ed1ec24684"
     end
+  end
+
+  if build.with? "pdumper"
+    if build.head? or build.devel?
+      patch do
+        url "https://gist.githubusercontent.com/matthias-margush/d469a6a997c639bca10732d24b4abd33/raw/7b4a924a520a30e90a8e59bf3a572dd31c1efd99/pdumper-mac.diff"
+        sha256 "a7881e6e6784c9c7f2d982c1a522f6e546121f0c1b53ef08df78955ee769e457"
+      end
+    else
+      odie "--with-pdumper is not support on stable version of Emacs"
+    end
+
   end
 
   # 24 bit color patch
